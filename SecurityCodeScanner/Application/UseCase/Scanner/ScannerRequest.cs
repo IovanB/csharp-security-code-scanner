@@ -8,7 +8,7 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
         public string InputPath { get; private set; }
         public string CurrentPath { get; private set; }
         public List<ScannerLog> Logs { get; private set; }
-        public string OutputFormat { get; set; }
+        public string OutputFormat { get; private set; }
 
         public ScannerRequest(string inputPath, string output)
         {

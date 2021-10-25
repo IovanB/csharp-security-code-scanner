@@ -10,7 +10,7 @@ namespace SecurityCodeScanner
             Console.WriteLine("Enter a source code file path: ");
             string sourcePath = Console.ReadLine();
 
-            var request = new ScannerRequest(sourcePath, "PLAIN TEXT");
+            var request = new ScannerRequest(sourcePath, "json");
 
             if (String.IsNullOrEmpty(sourcePath))
             {
