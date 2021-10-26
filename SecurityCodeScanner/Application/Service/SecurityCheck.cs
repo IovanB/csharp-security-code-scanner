@@ -28,9 +28,9 @@ namespace SecurityCodeScanner.Application.Service
 
         public static bool FindSQLInjection(ScannerRequest scannerRequest, string input, string file, int linenumber)
         {
-            var sqlInjectionFormat = new Regex("^\".*(SELECT).*\b(WHERE)\b.*(\\%s)\b.*\"$");
+            var pattern = "^\"(SELECT|Select|select)\\b.*\\b(WHERE|Where|where)\\b\\s.*(%s)\"$";
 
-            if (sqlInjectionFormat.Match(input).Success)
+            if (Regex.IsMatch(input, pattern))
                 scannerRequest.AddLog("SQL Injection", file, linenumber);
 
             return false;
