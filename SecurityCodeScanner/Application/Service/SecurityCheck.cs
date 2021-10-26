@@ -16,35 +16,28 @@ namespace SecurityCodeScanner.Application.Service
 
         }
 
-        public static bool FindSensitiveData(ScannerRequest scannerRequest, string input, string file, int linenumber)
+        public static void FindSensitiveData(ScannerRequest scannerRequest, string input, string file, int linenumber)
         {
             string[] findSensitiveData = new string[] { "Checkmarx", "Hellman & Friedman", "$1.15b" };
 
             if (findSensitiveData.All(input.Contains))
                 scannerRequest.AddLog("Sensitive Data Exposure", file, linenumber);
-
-            return false;
         }
 
-        public static bool FindSQLInjection(ScannerRequest scannerRequest, string input, string file, int linenumber)
+        public static void FindSQLInjection(ScannerRequest scannerRequest, string input, string file, int linenumber)
         {
-            var sqlInjectionFormat = new Regex("^\".*(SELECT).*\b(WHERE)\b.*(\\%s)\b.*\"$");
+            var pattern = "^\"(SELECT|Select|select)\\b.*\\b(WHERE|Where|where)\\b\\s.*(%s)\"$";
 
-            if (sqlInjectionFormat.Match(input).Success)
+            if (Regex.IsMatch(input, pattern))
                 scannerRequest.AddLog("SQL Injection", file, linenumber);
-
-            return false;
         }
 
-        public static bool FindSiteScripting(ScannerRequest scannerRequest, string input, string file, int linenumber)
+        public static void FindSiteScripting(ScannerRequest scannerRequest, string input, string file, int linenumber)
         {
             string[] crossSiteScripting = new string[] { "Alert()" };
 
             if (crossSiteScripting.All(input.Contains))
                 scannerRequest.AddLog("Cross Site Scripting", file, linenumber);
-
-            return false;
-
         }
     }
 }
