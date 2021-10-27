@@ -25,7 +25,7 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"Read the message: {ex.Message}. StackTrace: {ex.StackTrace}");
             }
         }
 
@@ -51,13 +51,11 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
                 case "JSON":
                     Console.WriteLine(JsonConvert.SerializeObject(scannerRequest.Logs, Formatting.Indented));
                     break;
-                case "PLAIN TEXT":
+                default:
                     foreach (Domain.ScannerLog log in scannerRequest.Logs)
                     {
-                        Console.WriteLine("[{0}] in file \"{1}\" on line {2}", log.LogType, log.File, log.Line);
+                        Console.WriteLine($"[{log.LogType}] in file \"{log.File}\" on line {log.Line}");
                     }
-                    break;
-                default:
                     break;
             }
         }

@@ -7,16 +7,10 @@ namespace SecurityCodeScanner
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Enter a source code file path: ");
+            Console.Write("Enter a source code file path: ");
             string sourcePath = Console.ReadLine();
 
-            var request = new ScannerRequest(sourcePath, "json");
-
-            if (String.IsNullOrEmpty(sourcePath))
-            {
-                Console.WriteLine("File path cannot be null or empty.");
-                return;
-            }
+            var request = new ScannerRequest(sourcePath, "");
 
             ScannerUseCase.ProcessRequest(request);
         }
