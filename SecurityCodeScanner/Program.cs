@@ -10,7 +10,7 @@ namespace SecurityCodeScanner
             Console.Write("Enter a source code file path: ");
             string sourcePath = Console.ReadLine();
 
-            var request = new ScannerRequest(sourcePath, "");
+            var request = new ScannerRequest(sourcePath, "text");
 
             ScannerUseCase.ProcessRequest(request);
         }

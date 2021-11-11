@@ -6,9 +6,12 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
     public class ScannerRequest
     {
         public string InputPath { get; private set; }
-        public string CurrentPath { get; private set; }
         public List<ScannerLog> Logs { get; private set; }
         public string OutputFormat { get; private set; }
+        public string CurrentPath { get;  set; }
+        public string File { get;  set; }
+        public string Line { get;  set; }
+        public int LineNumber { get;  set; }
 
         public ScannerRequest(string inputPath, string output)
         {
@@ -20,10 +23,6 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
 
         public void AddLog(string logType, string file, int lineNumber)
             => Logs.Add(ScannerLog.AddLog( logType, file,  lineNumber));
-
-        public string SetCurrentPath(string currentPath)
-            => this.CurrentPath = currentPath;
-
         
     }
 }

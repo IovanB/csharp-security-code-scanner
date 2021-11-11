@@ -16,7 +16,7 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
 
                 foreach (var code in sourceCode)
                 {
-                    scannerRequest.SetCurrentPath(code);
+                    scannerRequest.CurrentPath = code;
                     ExecuteScanner(scannerRequest);
                 }
 
@@ -25,22 +25,21 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Read the message: {ex.Message}. StackTrace: {ex.StackTrace}");
+                Console.WriteLine($"An error has occured while scanning the code: {ex.Message}. StackTrace: {ex.StackTrace}");
             }
         }
 
         public static void ExecuteScanner(ScannerRequest scannerRequest)
         {
-            int lineNumber = 0;
-            string line;
-            string file = scannerRequest.CurrentPath.Split('\\').Last();
+            scannerRequest.LineNumber = 0;
+            scannerRequest.File = scannerRequest.CurrentPath.Split('\\').Last();
 
             var readLine = new StreamReader(scannerRequest.CurrentPath);
 
-            while ((line = readLine.ReadLine()) != null)
+            while ((scannerRequest.Line = readLine.ReadLine()) != null)
             {
-                SecurityCheck.SecurityCheckSteps(scannerRequest, line, file, lineNumber);
-                lineNumber++;
+                SecurityCheck.SecurityCheckSteps(scannerRequest);
+                scannerRequest.LineNumber++;
             }
         }
 

@@ -6,38 +6,38 @@ namespace SecurityCodeScanner.Application.Service
 {
     public static class SecurityCheck
     {
-        public static void SecurityCheckSteps(ScannerRequest scannerRequest, string input, string file, int lineNumber)
+        public static void SecurityCheckSteps(ScannerRequest scannerRequest)
         {
-            FindSensitiveData(scannerRequest, input, file, lineNumber);
+            FindSensitiveData(scannerRequest);
 
-            FindSQLInjection(scannerRequest, input, file, lineNumber);
+            FindSQLInjection(scannerRequest);
 
-            FindSiteScripting(scannerRequest, input, file, lineNumber);
+            FindSiteScripting(scannerRequest);
 
         }
 
-        public static void FindSensitiveData(ScannerRequest scannerRequest, string input, string file, int lineNumber)
+        public static void FindSensitiveData(ScannerRequest scannerRequest)
         {
-            string[] findSensitiveData = new string[] { "Checkmarx", "Hellman & Friedman", "$1.15b" };
+            string[] findSensitiveData = new string[3] { "Checkmarx", "Hellman & Friedman", "$1.15b" };
 
-            if (findSensitiveData.All(input.Contains))
-                scannerRequest.AddLog("Sensitive Data Exposure", file, lineNumber);
+            if (findSensitiveData.All(scannerRequest.Line.Contains))
+                scannerRequest.AddLog("Sensitive Data Exposure", scannerRequest.File, scannerRequest.LineNumber);
         }
 
-        public static void FindSQLInjection(ScannerRequest scannerRequest, string input, string file, int lineNumber)
+        public static void FindSQLInjection(ScannerRequest scannerRequest)
         {
             var pattern = "^\"(SELECT|Select|select)\\b.*\\b(WHERE|Where|where)\\b\\s.*(%s)\"$";
 
-            if (Regex.IsMatch(input, pattern))
-                scannerRequest.AddLog("SQL Injection", file, lineNumber);
+            if (Regex.IsMatch(scannerRequest.Line, pattern))
+                scannerRequest.AddLog("SQL Injection", scannerRequest.File, scannerRequest.LineNumber);
         }
 
-        public static void FindSiteScripting(ScannerRequest scannerRequest, string input, string file, int lineNumber)
+        public static void FindSiteScripting(ScannerRequest scannerRequest)
         {
-            string[] crossSiteScripting = new string[] { "Alert()" };
+            string[] crossSiteScripting = new string[1] { "Alert()" };
 
-            if (crossSiteScripting.All(input.Contains))
-                scannerRequest.AddLog("Cross Site Scripting", file, lineNumber);
+            if (crossSiteScripting.All(scannerRequest.Line.Contains))
+                scannerRequest.AddLog("Cross Site Scripting", scannerRequest.File, scannerRequest.LineNumber);
         }
     }
 }
