@@ -16,7 +16,7 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
 
                 foreach (var code in sourceCode)
                 {
-                    scannerRequest.SetCurrentPath(code);
+                    scannerRequest.CurrentPath = code;
                     ExecuteScanner(scannerRequest);
                 }
 
@@ -25,22 +25,21 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"An error has occured while scanning the code: {ex.Message}. StackTrace: {ex.StackTrace}");
             }
         }
 
         public static void ExecuteScanner(ScannerRequest scannerRequest)
         {
-            int lineNumber = 0;
-            string line;
-            string file = scannerRequest.CurrentPath.Split('\\').Last();
+            scannerRequest.LineNumber = 0;
+            scannerRequest.File = scannerRequest.CurrentPath.Split('\\').Last();
 
             var readLine = new StreamReader(scannerRequest.CurrentPath);
 
-            while ((line = readLine.ReadLine()) != null)
+            while ((scannerRequest.Line = readLine.ReadLine()) != null)
             {
-                SecurityCheck.SecurityCheckSteps(scannerRequest, line, file, lineNumber);
-                lineNumber++;
+                SecurityCheck.SecurityCheckSteps(scannerRequest);
+                scannerRequest.LineNumber++;
             }
         }
 
@@ -51,13 +50,11 @@ namespace SecurityCodeScanner.Application.UseCase.Scanner
                 case "JSON":
                     Console.WriteLine(JsonConvert.SerializeObject(scannerRequest.Logs, Formatting.Indented));
                     break;
-                case "PLAIN TEXT":
+                default:
                     foreach (Domain.ScannerLog log in scannerRequest.Logs)
                     {
-                        Console.WriteLine("[{0}] in file \"{1}\" on line {2}", log.LogType, log.File, log.Line);
+                        Console.WriteLine($"[{log.LogType}] in file \"{log.File}\" on line {log.Line}");
                     }
-                    break;
-                default:
                     break;
             }
         }
